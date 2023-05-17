@@ -42,13 +42,15 @@ class WhisperNode
 
     // ROS
     ros::NodeHandle nh;
-    ros::Subscriber sub_audio_data = nh.subscribe("voice", 10, &WhisperNode::CallbackAudioData, this);
-    ros::Publisher  pub_output_text = nh.advertise<std_msgs::String>("whispered", 1);
+    ros::Subscriber sub_audio_data ;//= nh.subscribe("voice", 10, &WhisperNode::CallbackAudioData, this);
+    ros::Publisher  pub_output_text;// = nh.advertise<std_msgs::String>("whispered", 1);
 
 
     public:
         // Constructor
-        WhisperNode()
+        WhisperNode():nh(/*"stt"*/),
+        sub_audio_data(nh.subscribe("voice", 10, &WhisperNode::CallbackAudioData, this)),
+        pub_output_text(nh.advertise<std_msgs::String>("whispered", 1))
         {
             InitParams();
             InitWhisper();
@@ -63,20 +65,21 @@ class WhisperNode
         void InitParams()
         {
             ROS_INFO("[WHISPER] Initializing parameters");
-            nh.getParam("/voice/whisper_node/offset_t_ms",     params.offset_t_ms);
-            nh.getParam("/voice/whisper_node/duration_ms",     params.duration_ms);
-            nh.getParam("/voice/whisper_node/max_context",     params.max_context);
-            nh.getParam("/voice/whisper_node/max_len",         params.max_len);
-            nh.getParam("/voice/whisper_node/word_thold",      params.word_thold);
-            nh.getParam("/voice/whisper_node/speed_up",        params.speed_up);
-            nh.getParam("/voice/whisper_node/translate",       params.translate);
-            nh.getParam("/voice/whisper_node/print_special",   params.print_special);
-            nh.getParam("/voice/whisper_node/print_progress",  params.print_progress);
-            nh.getParam("/voice/whisper_node/no_timestamps",   params.no_timestamps);
-            nh.getParam("/voice/whisper_node/language",        params.language);
-            nh.getParam("/voice/whisper_node/model",           params.model);
-            nh.getParam("/voice/whisper_node/print_timings",   params.print_timings);
-            nh.getParam("/voice/whisper_node/show_result",     params.show_result);
+            //change from /voice/ to /stt/
+            nh.getParam("/stt/whisper_node/offset_t_ms",     params.offset_t_ms);
+            nh.getParam("/stt/whisper_node/duration_ms",     params.duration_ms);
+            nh.getParam("/stt/whisper_node/max_context",     params.max_context);
+            nh.getParam("/stt/whisper_node/max_len",         params.max_len);
+            nh.getParam("/stt/whisper_node/word_thold",      params.word_thold);
+            nh.getParam("/stt/whisper_node/speed_up",        params.speed_up);
+            nh.getParam("/stt/whisper_node/translate",       params.translate);
+            nh.getParam("/stt/whisper_node/print_special",   params.print_special);
+            nh.getParam("/stt/whisper_node/print_progress",  params.print_progress);
+            nh.getParam("/stt/whisper_node/no_timestamps",   params.no_timestamps);
+            nh.getParam("/stt/whisper_node/language",        params.language);
+            nh.getParam("/stt/whisper_node/model",           params.model);
+            nh.getParam("/stt/whisper_node/print_timings",   params.print_timings);
+            nh.getParam("/stt/whisper_node/show_result",     params.show_result);
 
             ROS_INFO("[WHISPER] PARAMETERS");
             ROS_INFO("[WHISPER]   - offset_t_ms: %d",       params.offset_t_ms);
